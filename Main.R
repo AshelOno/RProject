@@ -1,4 +1,3 @@
-# Main.R
 source("src/Data_Preparation.R")
 source("src/Feature_Engineering.R")
 source("src/Regression_Module.R")
