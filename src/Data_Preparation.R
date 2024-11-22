@@ -33,7 +33,7 @@ Data_Preparation <- function() {
     filter(Price >= lower_bound & Price <= upper_bound)
   
   # Visualize Price distribution using a boxplot
-  boxplot(data$Price, main = "Boxplot of Prices", horizontal = TRUE)
+  #boxplot(data$Price, main = "Boxplot of Prices", horizontal = TRUE)
   
   
   # Return the cleaned data
