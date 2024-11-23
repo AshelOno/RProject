@@ -1,4 +1,5 @@
 # Main Script
+<<<<<<< HEAD
 install.packages("factoextra") 
 install.packages("ggplot2")
 install.packages("dplyr")
@@ -6,6 +7,8 @@ install.packages("scales")
 install.packages("corrplot")
 install.packages("GGally")
 install.packages("caret")
+=======
+>>>>>>> 4a011aa8c69186eae830f8fe4bf0d42fb6cd6100
 
 
 # Source the modularized scripts

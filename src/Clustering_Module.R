@@ -1,58 +1,53 @@
-# src/Clustering_Module.R
+# Load required libraries
+library(cluster)
+library(factoextra)
+library(dplyr)
+
+# Clustering Analysis Function
 Clustering_Analysis <- function(data) {
-  # Load required libraries
-  library(dplyr)
-  library(cluster)
-  library(factoextra)  # For cluster visualization
+  # Ensure data contains relevant columns
+  if (!all(c("Price", "Duration", "Days_Left") %in% names(data))) {
+    stop("The data must contain 'Price', 'Duration', and 'Days_Left' columns.")
+  }
   
-  # Step 1: Data Preparation
-  prepared_data <- Data_Preparation()
+  # Select relevant columns for clustering
+  clustering_data <- data %>% select(Price, Duration, Days_Left)
   
-  # Step 2: Feature Engineering
-  engineered_data <- Feature_Engineering(prepared_data)
+  # Scale the data for normalization
+  scaled_data <- scale(clustering_data)
   
-  # Step 3: Select Numeric Features and Scale Them
-  clustering_data <- engineered_data %>%
-    select(Price, Duration, price_per_hour) %>%  # Select relevant numeric columns
-    scale()  # Normalize features
-  
-  # Step 4: Perform K-Means Clustering
+  # Perform K-Means clustering (3 clusters as an example)
   set.seed(123)  # For reproducibility
-  kmeans_model <- kmeans(clustering_data, centers = 3, nstart = 10)  # Create 3 clusters
+  kmeans_result <- kmeans(scaled_data, centers = 3, nstart = 25)
   
-  # Step 5: Add Cluster Labels to the Dataset
-  engineered_data$Cluster <- kmeans_model$cluster  # Add cluster assignments to the dataset
+  # Add cluster labels to the original data
+  data$Cluster <- as.factor(kmeans_result$cluster)
   
-  # Step 6: Save Results to CSV Files
-  if (!dir.exists("results")) dir.create("results")
+  # Visualize clusters
+  fviz_cluster(kmeans_result, data = scaled_data, geom = "point", main = "Clustering of Flights")
   
-  ## (a) Save the dataset with cluster assignments
-  write.csv(engineered_data, "results/Clustering_Results.csv", row.names = FALSE)
+  # Ensure results directory exists
+  if (!dir.exists("results")) {
+    dir.create("results")
+  }
   
-  ## (b) Save the cluster centers
-  cluster_centers <- as.data.frame(kmeans_model$centers)  # Convert cluster centers to a data frame
-  write.csv(cluster_centers, "results/Cluster_Centers.csv", row.names = TRUE)
-  
-  ## (c) Save summarized statistics for each cluster
-  cluster_summary <- engineered_data %>%
-    group_by(Cluster) %>%
-    summarize(
-      Avg_Price = mean(Price, na.rm = TRUE),
-      Avg_Duration = mean(Duration, na.rm = TRUE),
-      Avg_Price_Per_Hour = mean(price_per_hour, na.rm = TRUE),
-      Count = n()
-    )
-  write.csv(cluster_summary, "results/Cluster_Summary.csv", row.names = FALSE)
-  
-  # Step 7: Visualize Clusters using fviz_cluster (explicitly from factoextra)
-  factoextra::fviz_cluster(kmeans_model, data = clustering_data, geom = "point") +
-    ggtitle("K-Means Clustering of Flights")
-  
-  # Step 8: Return Results
-  return(list(
-    model = kmeans_model,               # The kmeans model object
-    clustered_data = engineered_data,   # Data with cluster labels
-    cluster_centers = cluster_centers,  # Cluster centers
-    cluster_summary = cluster_summary   # Cluster summary
-  ))
+  # Return clustered data
+  return(data)
 }
+
+# Main Script
+cat("Starting Clustering Analysis...\n")
+
+# Assuming engineered_data is already prepared before calling this function
+tryCatch({
+  # Perform clustering analysis
+  Clustering_Results <- Clustering_Analysis(engineered_data)
+  
+  # Write results to CSV
+  output_path <- "results/Clustering_Results.csv"
+  write.csv(Clustering_Results, output_path, row.names = FALSE)
+  cat("Clustering results saved to:", output_path, "\n")
+}, error = function(e) {
+  cat("Error during clustering analysis or file writing:\n", e$message, "\n")
+})
+
