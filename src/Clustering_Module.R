@@ -1,25 +1,31 @@
-# Clustering_Module.R
-
-library(cluster)
-library(factoextra)
-
-# Clustering Analysis function
+# src/Clustering_Module.R
 Clustering_Analysis <- function(data) {
-  # Select relevant columns for clustering
-  clustering_data <- data %>% select(Price, Duration, Days_Left)
+  library(cluster)
   
-  # Scale the data
-  scaled_data <- scale(clustering_data)
+  prepared_data <- Data_Preparation()
   
-  # K-means clustering (using 3 clusters as an example)
-  set.seed(123)
-  kmeans_result <- kmeans(scaled_data, centers = 3, nstart = 25)
+  # Perform feature engineering
+  engineered_data <- Feature_Engineering(prepared_data)
   
-  # Add cluster labels to data
-  data$Cluster <- as.factor(kmeans_result$cluster)
+  # Select numeric features and scale them
+  clustering_data <- engineered_data %>%
+    select(Price, Duration, price_per_hour) %>%  # Select relevant numeric columns
+    scale()  # Normalize features for distance-based clustering
   
-  # Visualize clusters
-  fviz_cluster(kmeans_result, data = scaled_data, geom = "point", main = "Clustering of Flights")
+  # Perform K-Means clustering
+  set.seed(123)  # For reproducibility
+  kmeans_model <- kmeans(clustering_data, centers = 3, nstart = 10)  # 3 clusters
   
-  return(data)
+  # Add cluster labels to the dataset
+  engineered_data$Cluster <- kmeans_model$cluster
+  
+  # Visualize the clusters
+  fviz_cluster(kmeans_model, data = clustering_data, geom = "point") +
+    ggtitle("K-Means Clustering of Flights")
+  
+  # Return the model and clustered data
+  return(list(model = kmeans_model, clustered_data = engineered_data))
+  
 }
+  
+
