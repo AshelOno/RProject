@@ -2,12 +2,6 @@
 Classification_Analysis <- function(data) {
   library(caret)
   
-  # Run Data Preparation
-  prepared_data <- Data_Preparation()
-  
-  # Perform feature engineering
-  engineered_data <- Feature_Engineering(prepared_data)
-  
   # Filter rows with a non-missing 'Class' column and ensure it's a factor
   classification_data <- engineered_data %>%
     filter(!is.na(Class)) %>%

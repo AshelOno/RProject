@@ -1,4 +1,3 @@
-# src/Data_Preparation.R
 Data_Preparation <- function() {
   library(readr)
   library(dplyr)
@@ -15,9 +14,11 @@ Data_Preparation <- function() {
   cat("Missing Values:\n")
   print(colSums(is.na(data)))
   
+  # Add engineered features
+  data$Duration_Hours <- data$Duration / 60  # Convert minutes to hours
+  data$price_per_hour <- data$Price / data$Duration_Hours  # Price per hour
   # Remove rows with missing values
   data <- na.omit(data)
-  
   
   # Step 4: Outlier Detection and Removal
   # Calculate Q1, Q3, and IQR for the 'Price' column
@@ -27,14 +28,12 @@ Data_Preparation <- function() {
   lower_bound <- Q1 - 1.5 * IQR
   upper_bound <- Q3 + 1.5 * IQR
   
-  
   # Remove outliers
   data <- data %>%
     filter(Price >= lower_bound & Price <= upper_bound)
   
   # Visualize Price distribution using a boxplot
-  #boxplot(data$Price, main = "Boxplot of Prices", horizontal = TRUE)
-  
+  boxplot(data$Price, main = "Boxplot of Prices", horizontal = TRUE)
   
   # Return the cleaned data
   return(data)

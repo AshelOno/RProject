@@ -1,5 +1,4 @@
-
-
+# Main Script
 
 # Source the modularized scripts
 source("src/Data_Preparation.R")
@@ -41,8 +40,3 @@ cat("Starting Clustering Analysis...\n")
 Clustering_Results <- Clustering_Analysis(engineered_data)
 write.csv(Clustering_Results, "results/Clustering_Results.csv", row.names = FALSE)
 cat("Clustering Analysis Completed. Results saved in 'results/Clustering_Results.csv'.\n\n")
-
-# Final Summary
-cat("All analysis completed successfully!\n")
-cat("Check the 'results' folder for outputs and the visualizations displayed during execution.\n")
-

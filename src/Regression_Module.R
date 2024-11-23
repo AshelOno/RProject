@@ -2,12 +2,6 @@
 Regression_Analysis <- function(data) {
   library(caret)
   
-  # Run Data Preparation
-  prepared_data <- Data_Preparation()
-  
-  # Perform feature engineering
-  engineered_data <- Feature_Engineering(prepared_data)
-  
   # Select predictors and target variable
   regression_data <- engineered_data %>%
     select(Price, Duration, price_per_hour, Days_Left)  # Target and numeric predictors
