@@ -48,6 +48,11 @@ tryCatch({
   write.csv(Clustering_Results, output_path, row.names = FALSE)
   cat("Clustering results saved to:", output_path, "\n")
 }, error = function(e) {
+<<<<<<< HEAD
+  cat("Error during clustering analysis or file writing:\n", e$message, "\n")
+})
+=======
   cat("Error during clustering analysis or file writing:\n", e$message, "\n")
 })
 
+>>>>>>> 4a011aa8c69186eae830f8fe4bf0d42fb6cd6100
