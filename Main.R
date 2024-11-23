@@ -1,6 +1,4 @@
 # Main Script
-install.packages("factoextra")  
-
 
 # Source the modularized scripts
 source("src/Data_Preparation.R")
