@@ -1,83 +1,66 @@
-# Classification Analysis Function
-Classification_Analysis <- function(file_path = "data/Clean_Dataset.csv") {
-  # Load required libraries
-  library(dplyr)
+# Classification Module
+Classification_Analysis <- function(data) {
   library(caret)
   library(rpart)
   library(rpart.plot)
+  library(dplyr)
   
-  # Step 1: Data Preparation
-  prepared_data <- Data_Preparation(file_path)
+  # Step 1: Transform the dataset for classification
+  cat("Preparing dataset for classification...\n")
+  # Add a binary classification target: "High" (Above median) and "Low" (Below median) price
+  data <- data %>%
+    mutate(
+      Price_Class = ifelse(Price > median(Price, na.rm = TRUE), "High", "Low"),
+      Price_Class = factor(Price_Class, levels = c("Low", "High"))  # Ensure correct order
+    )
   
-  # Step 2: Feature Engineering
-  engineered_data <- Feature_Engineering(prepared_data)
-  
-  # Step 3: Create a binary classification target ('High' vs 'Low') for Price
-  engineered_data <- engineered_data %>%
-    mutate(Price_Class = ifelse(Price > median(Price, na.rm = TRUE), 'High', 'Low'))
-  
-  # Ensure Price_Class is a factor
-  engineered_data$Price_Class <- factor(engineered_data$Price_Class, levels = c("Low", "High"))
-  
-  # Step 4: Select features and filter the data for classification
-  classification_data <- engineered_data %>%
-    select(Price, Duration, price_per_hour, Days_Left, Price_Class) %>%
-    filter(!is.na(Price_Class))  # Remove rows with missing Price_Class
-  
-  # Check for sufficient data
-  if (nrow(classification_data) < 2) {
-    stop("Insufficient data for classification. Please check the input dataset.")
-  }
-  
-  # Step 5: Split the data into training and test sets
+  # Step 2: Split the data into training and testing sets
   set.seed(123)  # For reproducibility
-  train_index <- createDataPartition(classification_data$Price_Class, p = 0.8, list = FALSE)
-  train_data <- classification_data[train_index, ]
-  test_data <- classification_data[-train_index, ]
+  train_index <- createDataPartition(data$Price_Class, p = 0.8, list = FALSE)
+  train_data <- data[train_index, ]
+  test_data <- data[-train_index, ]
   
-  # Step 6: Train a Decision Tree model
+  cat("Training data size: ", nrow(train_data), "\n")
+  cat("Testing data size: ", nrow(test_data), "\n\n")
+  
+  # Step 3: Train a decision tree classifier
+  cat("Training Decision Tree Classifier...\n")
   tree_model <- rpart(
-    Price_Class ~ Price + Duration + price_per_hour + Days_Left,
+    Price_Class ~ Airline + Source_City + Destination_City + Stops + Class +
+      Duration + Days_Left + Departure_Time_Category + IsWeekend + price_per_hour,
     data = train_data,
-    method = "class"  # Classification method
+    method = "class",
+    control = rpart.control(cp = 0.01)  # Set complexity parameter
   )
   
-  # Step 7: Visualize the Decision Tree
+  # Visualize the tree
   rpart.plot(tree_model, main = "Decision Tree for Price Classification")
   
-  # Step 8: Predict on the test set
+  # Step 4: Make predictions on the test dataset
+  cat("Making predictions on the test dataset...\n")
   predicted_classes <- predict(tree_model, test_data, type = "class")
-  predicted_classes <- factor(predicted_classes, levels = levels(test_data$Price_Class))
   
-  # Step 9: Evaluate the model using a confusion matrix
+  # Step 5: Evaluate the model
+  cat("Evaluating the model...\n")
   confusion_matrix <- confusionMatrix(predicted_classes, test_data$Price_Class)
   
-  # Save Results
-  # Predicted vs Actual
-  predicted_vs_actual <- data.frame(
-    Predicted = predicted_classes,
-    Actual = test_data$Price_Class
-  )
-  write.csv(predicted_vs_actual, "results/Classification_Results.csv", row.names = FALSE)
+  # Extract evaluation metrics
+  accuracy <- confusion_matrix$overall["Accuracy"]
+  precision <- confusion_matrix$byClass["Pos Pred Value"]  # Precision
+  recall <- confusion_matrix$byClass["Sensitivity"]        # Recall
+  f1_score <- 2 * ((precision * recall) / (precision + recall))
   
-  # Save Confusion Matrix
-  confusion_matrix_table <- as.data.frame(confusion_matrix$table)
-  write.csv(confusion_matrix_table, "results/Confusion_Matrix.csv", row.names = FALSE)
+  cat("\nModel Evaluation Metrics:\n")
+  cat("Accuracy: ", accuracy, "\n")
+  cat("Precision: ", precision, "\n")
+  cat("Recall: ", recall, "\n")
+  cat("F1 Score: ", f1_score, "\n\n")
   
-  # Save Model
-  saveRDS(tree_model, "results/Tree_Model.rds")
-  
-  # Return the results
+  # Step 6: Return results
   return(list(
     model = tree_model,
     confusion_matrix = confusion_matrix,
-    predicted_classes = predicted_classes,
-    test_data = test_data
+    predictions = data.frame(Actual = test_data$Price_Class, Predicted = predicted_classes),
+    metrics = data.frame(Accuracy = accuracy, Precision = precision, Recall = recall, F1_Score = f1_score)
   ))
 }
-
-# Ensure the "results" folder exists
-if (!dir.exists("results")) dir.create("results")
-
-# Example: Run the analysis
-results <- Classification_Analysis("data/Clean_Dataset.csv")

@@ -37,14 +37,18 @@ Classification_Results <- Classification_Analysis(engineered_data)
 # Save predictions to a CSV file
 write.csv(Classification_Results$predictions, "results/Classification_Predictions.csv", row.names = FALSE)
 
-# Save confusion matrix table to a CSV file
+# Save confusion matrix as a CSV file
 conf_matrix_df <- as.data.frame(Classification_Results$confusion_matrix$table)
 write.csv(conf_matrix_df, "results/Confusion_Matrix.csv", row.names = FALSE)
 
-# Save the decision tree model as an RDS file for later use
+# Save the decision tree model as an RDS file
 saveRDS(Classification_Results$model, "results/Tree_Model.rds")
 
-cat("Classification Analysis Completed. Predictions and Confusion Matrix saved in 'results/' folder.\n\n")
+# Save evaluation metrics
+write.csv(Classification_Results$metrics, "results/Classification_Metrics.csv", row.names = FALSE)
+
+cat("Classification Analysis Completed.\n")
+cat("Predictions, Confusion Matrix, and Metrics saved in 'results/' folder.\n")
 
 
 # Step 6: Clustering Analysis
