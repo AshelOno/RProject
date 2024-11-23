@@ -80,6 +80,14 @@ Data_Visualization <- function(data) {
   print(engineered_box_plot)
   Sys.sleep(2)
   
+  #Price per Hour Analysis
+  price_per_hour_plot <- ggplot(data, aes(x = price_per_hour)) +
+    geom_histogram(bins = 30, fill = "seagreen", color = "black", alpha = 0.7) +
+    labs(title = "Price Per Hour Distribution", x = "Price Per Hour", y = "Frequency") +
+    theme_minimal()
+  print(price_per_hour_plot)
+  Sys.sleep(2)
+  
   # Price vs. Duration
   price_vs_duration_plot <- ggplot(cleaned_data, aes(x = Duration, y = Price, color = Class)) +
     geom_point(alpha = 0.6) +
