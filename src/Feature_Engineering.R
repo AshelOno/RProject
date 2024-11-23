@@ -40,5 +40,7 @@ Feature_Engineering <- function(data) {
     ordered = TRUE
   )
   
+  data$price_per_hour <- data$Price / data$Duration
+  
   return(data)
 }

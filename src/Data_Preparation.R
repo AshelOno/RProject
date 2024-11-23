@@ -35,6 +35,9 @@ Data_Preparation <- function() {
   # Visualize Price distribution using a boxplot
   boxplot(data$Price, main = "Boxplot of Prices", horizontal = TRUE)
   
+  data <- data %>%
+    filter(!is.na(Price))  # Remove rows with missing 'Price'
+  
   # Return the cleaned data
   return(data)
 }

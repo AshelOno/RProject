@@ -32,9 +32,17 @@ cat("Regression Analysis Completed. Results saved in 'results/Regression_Results
 
 # Step 5: Classification Analysis
 cat("Starting Classification Analysis...\n")
-Classification_Results <- Classification_Analysis(engineered_data)
-write.csv(Classification_Results, "results/Classification_Results.csv", row.names = FALSE)
-cat("Classification Analysis Completed. Results saved in 'results/Classification_Results.csv'.\n\n")
+tryCatch({
+  Classification_Results <- Classification_Analysis(engineered_data)
+  cm_df <- as.data.frame(Classification_Results$confusion_matrix$table)
+  write.csv(cm_df, "results/Classification_Results.csv", row.names = FALSE)
+  
+  predictions_df <- Classification_Results$predictions
+  write.csv(predictions_df, "results/Classification_Predictions.csv", row.names = FALSE)
+  cat("Classification Analysis Completed. Results saved in 'results/Classification_Results.csv'.\n\n")
+}, error = function(e) {
+  cat("Error during Classification Analysis: ", e$message, "\n")
+})
 
 # Step 6: Clustering Analysis
 cat("Starting Clustering Analysis...\n")
