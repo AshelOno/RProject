@@ -88,12 +88,13 @@ Data_Visualization <- function(data) {
   print(price_per_hour_plot)
   Sys.sleep(2)
   
-  # Price vs. Duration
-  price_vs_duration_plot <- ggplot(cleaned_data, aes(x = Duration, y = Price, color = Class)) +
-    geom_point(alpha = 0.6) +
-    geom_smooth(method = "lm", color = "red", linetype = "dashed") +
-    labs(title = "Price vs Duration by Class", x = "Duration (Hours)", y = "Price") +
-    theme_minimal()
-  print(price_vs_duration_plot)
+  # # Price vs. Duration
+  # price_vs_duration_plot <- ggplot(cleaned_data, aes(x = Duration, y = Price, color = Class)) +
+  #   geom_point(alpha = 0.6) +
+  #   geom_smooth(method = "lm", color = "red", linetype = "dashed") +
+  #   labs(title = "Price vs Duration by Class", x = "Duration (Hours)", y = "Price") +
+  #   theme_minimal()
+  # print(price_vs_duration_plot)
+  
 }
 
