@@ -2,12 +2,6 @@
 Regression_Analysis <- function(data) {
   library(caret)
   
-  # Run Data Preparation
-  prepared_data <- Data_Preparation()
-  
-  # Perform feature engineering
-  engineered_data <- Feature_Engineering(prepared_data)
-  
   # Select predictors and target variable
   regression_data <- engineered_data %>%
     select(Price, Duration, price_per_hour, Days_Left)  # Target and numeric predictors
@@ -66,7 +60,7 @@ Regression_Analysis <- function(data) {
   print(head(results_df))
   # Return the regression model and predictions
   return(list(model = regression_model, results = results_df))
-  
+  str(Regression_Results)  # View the structure of the returned list
   
   # Example usage
   regression_result <- Regression_Analysis(your_dataset)
