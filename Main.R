@@ -1,6 +1,3 @@
-
-
-
 # Source the modularized scripts
 source("src/Data_Preparation.R")
 source("src/Feature_Engineering.R")
@@ -27,7 +24,7 @@ cat("Data Visualization Completed.\n\n")
 # Step 4: Regression Analysis
 cat("Starting Regression Analysis...\n")
 Regression_Results <- Regression_Analysis(engineered_data)
-write.csv(Regression_Results, "results/Regression_Results.csv", row.names = FALSE)
+write.csv(results_df, "results/Regression_Results.csv", row.names = FALSE)
 cat("Regression Analysis Completed. Results saved in 'results/Regression_Results.csv'.\n\n")
 
 # Step 5: Classification Analysis
