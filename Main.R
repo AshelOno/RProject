@@ -1,3 +1,9 @@
+<<<<<<< HEAD
+=======
+# Main Script
+
+
+>>>>>>> c5fadc36a64b9265beddbaf4f47583eeb109fc30
 # Source the modularized scripts
 source("src/Data_Preparation.R")
 source("src/Feature_Engineering.R")
@@ -30,16 +36,26 @@ cat("Regression Analysis Completed. Results saved in 'results/Regression_Results
 # Step 5: Classification Analysis
 cat("Starting Classification Analysis...\n")
 Classification_Results <- Classification_Analysis(engineered_data)
-write.csv(Classification_Results, "results/Classification_Results.csv", row.names = FALSE)
-cat("Classification Analysis Completed. Results saved in 'results/Classification_Results.csv'.\n\n")
+
+# Save predictions to a CSV file
+write.csv(Classification_Results$predictions, "results/Classification_Predictions.csv", row.names = FALSE)
+
+# Save confusion matrix as a CSV file
+conf_matrix_df <- as.data.frame(Classification_Results$confusion_matrix$table)
+write.csv(conf_matrix_df, "results/Confusion_Matrix.csv", row.names = FALSE)
+
+# Save the decision tree model as an RDS file
+saveRDS(Classification_Results$model, "results/Tree_Model.rds")
+
+# Save evaluation metrics
+write.csv(Classification_Results$metrics, "results/Classification_Metrics.csv", row.names = FALSE)
+
+cat("Classification Analysis Completed.\n")
+cat("Predictions, Confusion Matrix, and Metrics saved in 'results/' folder.\n")
+
 
 # Step 6: Clustering Analysis
 cat("Starting Clustering Analysis...\n")
 Clustering_Results <- Clustering_Analysis(engineered_data)
 write.csv(Clustering_Results, "results/Clustering_Results.csv", row.names = FALSE)
 cat("Clustering Analysis Completed. Results saved in 'results/Clustering_Results.csv'.\n\n")
-
-# Final Summary
-cat("All analysis completed successfully!\n")
-cat("Check the 'results' folder for outputs and the visualizations displayed during execution.\n")
-
