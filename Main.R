@@ -1,9 +1,5 @@
-<<<<<<< HEAD
-=======
 # Main Script
 
-
->>>>>>> c5fadc36a64b9265beddbaf4f47583eeb109fc30
 # Source the modularized scripts
 source("src/Data_Preparation.R")
 source("src/Feature_Engineering.R")
