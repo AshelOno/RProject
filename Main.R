@@ -1,9 +1,4 @@
-<<<<<<< HEAD
-=======
 # Main Script
-
-
->>>>>>> c5fadc36a64b9265beddbaf4f47583eeb109fc30
 # Source the modularized scripts
 source("src/Data_Preparation.R")
 source("src/Feature_Engineering.R")
@@ -11,6 +6,7 @@ source("src/Data_Visualization.R")
 source("src/Regression_Module.R")
 source("src/Classification_Module.R")
 source("src/Clustering_Module.R")
+
 
 # Step 1: Data Preparation
 cat("Starting Data Preparation...\n")
@@ -30,8 +26,11 @@ cat("Data Visualization Completed.\n\n")
 # Step 4: Regression Analysis
 cat("Starting Regression Analysis...\n")
 Regression_Results <- Regression_Analysis(engineered_data)
-write.csv(results_df, "results/Regression_Results.csv", row.names = FALSE)
+# Save the results to a CSV
+write.csv(Regression_Results$results, "results/Regression_Results.csv", row.names = FALSE)
+
 cat("Regression Analysis Completed. Results saved in 'results/Regression_Results.csv'.\n\n")
+
 
 # Step 5: Classification Analysis
 cat("Starting Classification Analysis...\n")

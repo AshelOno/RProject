@@ -66,6 +66,7 @@ Regression_Analysis <- function(data) {
   print(head(results_df))
   # Return the regression model and predictions
   return(list(model = regression_model, results = results_df))
+  str(Regression_Results)  # View the structure of the returned list
   
   
   # Example usage
