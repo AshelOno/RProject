@@ -44,10 +44,14 @@
   cat("Classification Analysis Completed.\n")
   cat("Predictions, Confusion Matrix, and Metrics saved in 'results/' folder.\n")
 
-# Step 6: Clustering Analysis
+  # Step 6: Clustering Analysis
   cat("Starting Clustering Analysis...\n")
-  Clustering_Results <- Clustering_Analysis(engineered_data)
-  write.csv(Clustering_Results, "results/Clustering_Results.csv", row.names = FALSE)
-  cat("Clustering Analysis Completed. Results saved in 'results/Clustering_Results.csv'.\n\n")
+  Clustering_Results <- Clustering_Analysis(engineered_data)  # Performs clustering analysis
+  write.csv(Clustering_Results$clustered_data, "results/Clustering_Results.csv", row.names = FALSE)  # Saves data with cluster labels
+  write.csv(Clustering_Results$cluster_summary, "results/Cluster_Summary.csv", row.names = FALSE)  # Saves summary statistics for clusters
+  write.csv(as.data.frame(Clustering_Results$cluster_centers), "results/Cluster_Centers.csv", row.names = TRUE)  # Saves cluster centers
+  cluster_sizes <- data.frame(Cluster = 1:length(Clustering_Results$cluster_sizes), Size = Clustering_Results$cluster_sizes)  # Formats cluster sizes
+  write.csv(cluster_sizes, "results/Cluster_Sizes.csv", row.names = FALSE)  # Saves cluster sizes
+  cat("Clustering Analysis Completed. Results saved in 'results/' folder.\n\n")
 
   cat("Project successfully completed. All results have been saved and analyzed professionally.\n")
