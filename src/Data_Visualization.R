@@ -20,7 +20,21 @@ Data_Visualization <- function(data) {
   print(price_dist_plot)
   Sys.sleep(2)
   
-  # 2. Box Plot: Price by Stops
+  # 2. Average Price by Airline
+  avg_price_plot <- ggplot(cleaned_data %>%
+                             group_by(Airline) %>%
+                             summarize(Average_Price = mean(Price, na.rm = TRUE)),
+                           aes(x = reorder(Airline, -Average_Price), y = Average_Price, fill = Airline)) +
+    geom_bar(stat = "identity", color = "black", alpha = 0.7) +
+    geom_text(aes(label = dollar(Average_Price)), vjust = -0.3, size = 3) +
+    coord_flip() +
+    labs(title = "Average Price by Airline", x = "Airline", y = "Average Price") +
+    scale_fill_manual(values = custom_palette) +
+    theme_minimal()
+  print(avg_price_plot)
+  Sys.sleep(2)
+  
+  # 3. Box Plot: Price by Stops
   price_stops_plot <- ggplot(cleaned_data, aes(x = factor(Stops), y = Price, fill = factor(Stops))) +
     geom_boxplot(outlier.shape = 8, outlier.size = 3) +
     labs(title = "Price by Stops", x = "Number of Stops", y = "Price") +
@@ -29,7 +43,7 @@ Data_Visualization <- function(data) {
   print(price_stops_plot)
   Sys.sleep(2)
   
-  # 3. Heatmap: Correlation between Numeric Columns
+  # 4. Heatmap: Correlation between Numeric Columns
   heatmap_data <- cleaned_data %>%
     select_if(is.numeric)  # Select only numeric columns
   
@@ -51,22 +65,14 @@ Data_Visualization <- function(data) {
   }
   Sys.sleep(2)
   
-  # 4. Box Plot: Price by Class
-  price_class_plot <- ggplot(cleaned_data, aes(x = factor(Class), y = Price, fill = factor(Class))) +
-    geom_boxplot(outlier.shape = 8, outlier.size = 3) +
-    labs(title = "Price by Class", x = "Class", y = "Price") +
+  # 5. Bar Chart: Flights by Airline
+  airline_bar_plot <- ggplot(cleaned_data, aes(x = Airline, fill = Airline)) +
+    geom_bar() +
+    geom_text(stat = 'count', aes(label = ..count..), vjust = -0.3, size = 3) +
+    labs(title = "Number of Flights by Airline", x = "Airline", y = "Count") +
     scale_fill_manual(values = custom_palette) +
     theme_minimal()
-  print(price_class_plot)
-  Sys.sleep(2)
-  
-  # 5. Scatter Plot: Price vs Duration
-  price_duration_plot <- ggplot(cleaned_data, aes(x = Duration, y = Price, color = Class)) +
-    geom_point(alpha = 0.6) +
-    geom_smooth(method = "lm", color = "red", linetype = "dashed") +
-    labs(title = "Price vs Duration", x = "Duration (Hours)", y = "Price") +
-    theme_minimal()
-  print(price_duration_plot)
+  print(airline_bar_plot)
   Sys.sleep(2)
   
   # 6. Pie Chart: Flights by Class
