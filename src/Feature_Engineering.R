@@ -14,6 +14,7 @@ Feature_Engineering <- function(data) {
       Price = as.numeric(Price),
       Duration = as.numeric(Duration),
       Days_Left = as.numeric(Days_Left),
+      price_per_hour = as.numeric(price_per_hour),
       Departure_Time = as.POSIXct(Departure_Time, format = "%Y-%m-%d %H:%M:%S", tz = "UTC"),
       Arrival_Time = as.POSIXct(Arrival_Time, format = "%Y-%m-%d %H:%M:%S", tz = "UTC")
     )
