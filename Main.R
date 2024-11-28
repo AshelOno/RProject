@@ -9,7 +9,8 @@
 
 # Step 1: Data Preparation
   cat("Starting Data Preparation...\n")
-  cleaned_data <- Data_Preparation()
+  file_path <- "data/Clean_Dataset.csv" 
+  cleaned_data <- Data_Preparation(file_path)
   cat("Data Preparation Completed.\n\n")
 
 # Step 2: Feature Engineering

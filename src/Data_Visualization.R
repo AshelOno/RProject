@@ -27,13 +27,13 @@ Data_Visualization <- function(data) {
                            aes(x = reorder(Airline, -Average_Price), y = Average_Price, fill = Airline)) +
     geom_bar(stat = "identity", color = "black", alpha = 0.7) +
     geom_text(aes(label = dollar(Average_Price)), vjust = -0.3, size = 3) +
+    coord_flip() +
     labs(title = "Average Price by Airline", x = "Airline", y = "Average Price") +
     scale_fill_manual(values = custom_palette) +
     theme_minimal()
-  
   print(avg_price_plot)
   Sys.sleep(2)
-  
+
   # 3. Bar Chart: Flights by Airline
   airline_bar_plot <- ggplot(cleaned_data, aes(x = Airline, fill = Airline)) +
     geom_bar() +
@@ -44,7 +44,6 @@ Data_Visualization <- function(data) {
   print(airline_bar_plot)
   Sys.sleep(2)
  
-  
   # 4. Box Plot: Price by Stops
   price_stops_plot <- ggplot(cleaned_data, aes(x = factor(Stops), y = Price, fill = factor(Stops))) +
     geom_boxplot(outlier.shape = 8, outlier.size = 3) +
