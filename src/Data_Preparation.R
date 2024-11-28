@@ -2,8 +2,17 @@ Data_Preparation <- function(file_path) {  # Added file_path as a parameter
   library(readr)
   library(dplyr)
   
+  # Define file path to the dataset
+  file_path <- "data/Clean_Dataset.csv"
+  
+  # Call the Data_Preparation function
+  cleaned_data <- Data_Preparation(file_path)
+  
+  # Inspect the cleaned dataset
+  head(cleaned_data)
+  
   # Load the dataset using the file_path argument
-  data <- read_csv("file_path")  # Use the provided file_path
+  data <- read_csv(file_path)  # Use the provided file_path
   
   # Rename columns for clarity
   colnames(data) <- c("Index", "Airline", "Flight", "Source_City", "Departure_Time",
@@ -41,12 +50,7 @@ Data_Preparation <- function(file_path) {  # Added file_path as a parameter
   # Return the cleaned data
   return(data)
 }
-# Define file path to the dataset
-file_path <- "data/Clean_Dataset.csv"
 
-# Call the Data_Preparation function
-cleaned_data <- Data_Preparation(file_path)
 
-# Inspect the cleaned dataset
-head(cleaned_data)
+
 
