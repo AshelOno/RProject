@@ -7,6 +7,9 @@ Data_Preparation <- function(file_path) {
   # Load the dataset using the provided file_path
   data <- read_csv(file_path)
   
+  # View first few rows to understand the structure
+  head(data)
+  
   # Rename columns for clarity
   colnames(data) <- c("Index", "Airline", "Flight", "Source_City", "Departure_Time",
                       "Stops", "Arrival_Time", "Destination_City", "Class",
