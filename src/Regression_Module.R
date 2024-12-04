@@ -1,9 +1,10 @@
 # src/Regression_Module.R
 Regression_Analysis <- function(data) {
   library(caret)
+  library(dplyr)
   
   # Select predictors and target variable
-  regression_data <- engineered_data %>%
+  regression_data <- data %>%
     select(Price, Duration, price_per_hour, Days_Left)  # Target and numeric predictors
   
   # Ensure all columns are numeric
@@ -24,45 +25,31 @@ Regression_Analysis <- function(data) {
   
   # Print summary of the model
   print(summary(regression_model))
+  
   # Predict on the test set
   predicted_prices <- predict(regression_model, test_data)
   
-  # Evaluate model performance using RMSE
-  # Ensure that test_data$Price and predicted_prices are numeric and aligned
-  if (!is.numeric(test_data$Price) || !is.numeric(predicted_prices)) {
-    stop("Error: test_data$Price or predicted_prices is not numeric.")
-  }
+  # Calculate RMSE (Root Mean Squared Error)
+  rmse <- sqrt(mean((predicted_prices - test_data$Price)^2))
+  print(paste("RMSE: ", rmse))
   
-  # Check for NA values and remove them if necessary
-  if (any(is.na(test_data$Price)) || any(is.na(predicted_prices))) {
-    warning("Missing values detected. They will be excluded from RMSE calculation.")
-    valid_indices <- !is.na(test_data$Price) & !is.na(predicted_prices)
-    actual_prices <- test_data$Price[valid_indices]
-    predicted_prices <- predicted_prices[valid_indices]
-  } else {
-    actual_prices <- test_data$Price
-  }
+  # Combine predictions with actual prices and calculate residuals
+  results <- data.frame(Actual = test_data$Price, Predicted = predicted_prices)
+  results$residuals <- results$Actual - results$Predicted
   
-  # Calculate RMSE
-  rmse <- sqrt(mean((actual_prices - predicted_prices)^2))
-  
-  # Print RMSE
-  cat("Root Mean Square Error (RMSE):", rmse, "\n")
+  # Save results to a CSV file
+  write.csv(results, "results/regression_results.csv")
   
   # Create a data frame for saving results
   results_df <- test_data %>%
     mutate(
       Predicted_Price = predicted_prices,  # Add predictions
-      Residuals = Price - predicted_prices # Calculate residuals
+      Residuals = Price - predicted_prices  # Calculate residuals
     )
   
   # Optionally print the results data frame (for verification)
   print(head(results_df))
+  
   # Return the regression model and predictions
   return(list(model = regression_model, results = results_df))
-  str(Regression_Results)  # View the structure of the returned list
-  
-  # Example usage
-  regression_result <- Regression_Analysis(your_dataset)
-  
 }
