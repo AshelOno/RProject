@@ -1,4 +1,5 @@
 # Main Script
+#install.packages(c("caret", "cluster", "factoextra", "rpart", "ggplot2", "ggfortify", "scales"))
 
 # Source the modularized scripts
   source("src/Data_Preparation.R")
